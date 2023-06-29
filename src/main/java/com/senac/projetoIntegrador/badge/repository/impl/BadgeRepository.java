@@ -7,12 +7,12 @@ import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.senac.projetoIntegrador.badge.dto.BadgeDto;
+import com.senac.projetoIntegrador.badge.exceptions.UserNotFoundException;
 import com.senac.projetoIntegrador.badge.repository.IBadgeRepository;
 
 @Repository
@@ -38,10 +38,10 @@ public class BadgeRepository implements IBadgeRepository{
 		this.dbConnection = new JdbcTemplate(dbConn);
 	}
 
-	public List<BadgeDto> getLatestBadgesByUsuarioId(String usuarioId) throws EmptyResultDataAccessException{
+	public List<BadgeDto> getLatestBadgesByUsuarioId(String usuarioId) throws UserNotFoundException{
 			List<BadgeDto> query = dbConnection.query(queries.getGetLatestBadgesByUsuarioId(), new BadgeMapper(), new Object[] {usuarioId});
 			if(query.size() == 0){
-				throw new EmptyResultDataAccessException(usuarioId, 1, null);
+				throw new UserNotFoundException();
 			}
 			return query;
 	}
