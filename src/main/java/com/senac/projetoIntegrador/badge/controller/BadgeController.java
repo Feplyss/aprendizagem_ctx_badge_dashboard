@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +22,7 @@ public class BadgeController {
 	IBadgeService service;
 	
 	@GetMapping("latest/{usuarioId}")
-	public ResponseEntity<List<LatestBadgesResponse>> retrieveLatestBadgesByUsuarioId(@PathVariable(required = true, value = "usuarioId") String usuarioId) {
+	public ResponseEntity<List<LatestBadgesResponse>> retrieveLatestBadgesByUsuarioId(@PathVariable(required = true, value = "usuarioId") String usuarioId) throws EmptyResultDataAccessException{
 		List<LatestBadgesResponse> listaBadges = service.getLatestBadgesByUsuarioId(usuarioId).stream()
 				.map(item -> new LatestBadgesResponse(
 						item.getDescricao(),
